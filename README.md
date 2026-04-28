@@ -104,7 +104,3 @@ mkdir -p profiles/my-stack/.claude/{rules,skills/my-skill}
 
 Then send a PR.
 
-## Credits
-
-Base structure inspired by Manthan Patel (@LeadGenMan).
-Extended with composable profiles, init.sh bootstrap, CLAUDE.local.md pattern, and additional skills.
