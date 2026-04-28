@@ -23,7 +23,7 @@ Format: [Semantic Versioning](https://semver.org/)
 - `package.json` — npm package for `npx` usage
 - `.github/CONTRIBUTING.md` — contribution guidelines
 - `.github/ISSUE_TEMPLATE/` — bug report and profile request templates
-- MIT license
+- GPL v3 license
 
 ### Architecture decisions
 - Composable profile system: profiles extend base, never override

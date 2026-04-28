@@ -1,6 +1,6 @@
 # claude-project-template
 
-![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![GitHub Template](https://img.shields.io/badge/Use%20as-Template-blue)
 
@@ -172,4 +172,4 @@ PRs welcome for new profiles (Vue, Elixir, Ruby/Rails, Rust, Laravel), new agent
 
 ---
 
-MIT License
+GPL v3 License — see [LICENSE](LICENSE) for details.

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// SPDX-License-Identifier: GPL-3.0-only
 /**
  * claude-project-template CLI
  * Usage: npx claude-project-template [profile] [--target <path>] [--dry-run] [--yes]
