@@ -1,0 +1,43 @@
+# Personal Overrides (gitignored)
+
+> This file is yours alone. It is automatically gitignored by Claude Code.
+> Use it for local paths, personal preferences, and machine-specific config.
+> Never commit secrets here — use your secret manager for those.
+
+## My local environment
+
+- **OS:** {{YOUR_OS}}
+- **Editor:** {{YOUR_EDITOR}}
+- **Node version:** {{NODE_VERSION}} (managed via {{nvm | volta | fnm}})
+- **Package manager:** {{npm | pnpm | yarn | bun}}
+
+## Local service endpoints
+
+```
+API:        http://localhost:{{PORT}}
+Database:   postgresql://localhost:5432/{{DB_NAME}}
+Redis:      redis://localhost:6379
+```
+
+## My preferences for this project
+
+- Preferred response style: {{concise | detailed | step-by-step}}
+- When I say "ship it": run lint + test + commit + push to current branch
+- When I say "clean up": refactor for readability, don't change behavior
+- Auto-commit after changes: {{yes | no}}
+
+## Local tooling
+
+```bash
+# My local AI routing (if using lcc or similar)
+# LCC_BACKEND=ollama   # for local-first
+# LCC_BACKEND=openrouter  # for cloud
+
+# Local tunnel (if needed)
+# TUNNEL_CMD=cloudflared tunnel --url http://localhost:3000
+```
+
+## Notes to myself
+
+<!-- Scratch pad — reminders, TODOs, things to tell Claude at session start -->
+-
