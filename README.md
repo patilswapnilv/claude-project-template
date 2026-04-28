@@ -2,43 +2,78 @@
 
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
-![GitHub Template](https://img.shields.io/badge/Use%20as-Template-blue)
+![Status: v1.0 — early](https://img.shields.io/badge/status-v1.0--early-orange.svg)
 
-> Stop re-explaining your stack to Claude every session. One setup. Every project. Zero repeated instructions.
+> A composable Claude Code setup — global preferences, project brain, and stack overlays — installed in one command. Claude knows your stack on the first prompt of every session.
 
 ---
 
-## The problem
+## Why
 
-Every new project, you spend 10–20 minutes explaining to Claude: your stack, your conventions, what not to touch, which commands to run. Then again next session. And again when a teammate opens Claude Code.
+Every new project, you spend 10–20 minutes telling Claude your stack, your conventions, what not to touch, which commands to run. Then again next session. And again when a teammate opens Claude Code.
 
-**This template fixes that.** Install once. Claude knows your project cold, every session.
+This template captures that context once — in the three files Claude Code actually reads — so you stop repeating yourself.
+
+---
+
+## What you get
+
+After install, your project has:
+
+- `CLAUDE.md` — project name, stack, and commands filled in. You'll edit a few sections (architecture, conventions) by hand.
+- `CLAUDE.local.md` — personal overrides scaffold, gitignored.
+- `.claude/` — 6 agents, 4 slash commands, 5 path-scoped rule files, 6 skills, and 2 hooks.
+- A stack profile merged in: Next.js, Go, Python data, React Native, or fullstack SaaS.
+
+Setup is about **5 minutes** end-to-end, and you can adopt the template before publishing the global file or any of the optional pieces.
 
 ---
 
 ## Quick start
 
+**Recommended path — clone + init.**
+
 ```bash
-# Option 1 — npx (no install needed)
-npx claude-project-template
-
-# Option 2 — degit (zero deps, fastest)
-npx degit patilswapnilv/claude-project-template/base .claude-setup
-cd .claude-setup && chmod +x scripts/init.sh && ./scripts/init.sh ..
-
-# Option 3 — clone
 git clone https://github.com/patilswapnilv/claude-project-template.git
-cd claude-project-template && ./scripts/init.sh /path/to/your/project
+cd claude-project-template
+./scripts/init.sh /path/to/your/project
 ```
 
-60 seconds later you have:
-- `CLAUDE.md` filled with your project specifics
-- 6 specialist agents (reviewer, debugger, test-writer, refactorer, doc-writer, security-auditor)
-- 4 slash commands (`/ship`, `/fix-issue`, `/pr-review`, `/scaffold`)
-- Hardened hooks (secret scanning, branch protection, lint-on-save)
-- 5 path-scoped rule files that auto-load only what's relevant
-- 6 skills (code-review, debug-session, schema-migration, security-review, frontend-design, devrel-post)
-- Stack-specific profile merged in (Next.js / Go / Python / React Native / SaaS)
+**Without git history (degit).**
+
+```bash
+npx degit patilswapnilv/claude-project-template claude-template
+cd claude-template
+./scripts/init.sh ../your-project
+```
+
+**Once published to npm:**
+
+```bash
+# npx claude-project-template --target /path/to/your/project
+```
+
+### Verify it worked
+
+```bash
+cd /path/to/your/project
+grep -c '{{' CLAUDE.md   # 0 means every placeholder was filled
+ls .claude               # should list agents, commands, hooks, rules, skills
+```
+
+Open Claude Code in the project and ask: *"What's my dev command?"* If it answers from `CLAUDE.md`, you're set.
+
+---
+
+## Compatibility
+
+| Requirement | Version |
+|---|---|
+| Claude Code | 1.0+ |
+| OS | macOS, Linux, WSL2. (Windows-native: use the `npx` CLI when published, not `init.sh`.) |
+| Node.js | ≥ 18 (only for the `npx` path) |
+| bash | 3.2+ |
+| git | 2.x |
 
 ---
 
@@ -47,129 +82,176 @@ cd claude-project-template && ./scripts/init.sh /path/to/your/project
 Claude Code reads instructions from three locations:
 
 ```
-~/.claude/CLAUDE.md       → Global: your personal preferences, every project
-./CLAUDE.md               → Project: shared with your team, committed to git
-./CLAUDE.local.md         → Local: your overrides, gitignored, never shared
+~/.claude/CLAUDE.md       Global   loaded into every session on this machine
+./CLAUDE.md               Project  loaded when Claude Code opens this project
+./CLAUDE.local.md         Local    loaded if present; gitignored
 ```
 
-| File | What's in it | Who edits it |
+| File | What goes in it | Who edits it |
 |---|---|---|
-| `global/CLAUDE.md` | Personal preferences, cross-project conventions | You, once |
-| `base/CLAUDE.md` | Project brain — stack, commands, architecture | Team |
-| `base/CLAUDE.local.md.example` | Local overrides template | Each dev, privately |
+| `~/.claude/CLAUDE.md` | Personal preferences across every project | You, once |
+| `CLAUDE.md` | Project brain — stack, commands, architecture | The team |
+| `CLAUDE.local.md` | Local paths, ports, machine-specific config | Each dev |
+
+After init, copy `global/CLAUDE.md` to `~/.claude/CLAUDE.md` *only if you don't already have one* — `init.sh` won't overwrite it for you. To merge with an existing global file, diff first:
+
+```bash
+diff -u ~/.claude/CLAUDE.md global/CLAUDE.md
+```
 
 ---
 
-## What's inside
+## What's inside (this repo)
 
 ```
 claude-project-template/
 ├── global/
-│   └── CLAUDE.md                    ← Copy to ~/.claude/CLAUDE.md
-├── base/                            ← Stack-agnostic foundation
+│   └── CLAUDE.md                   ← Template for ~/.claude/CLAUDE.md
+├── base/                           ← Stack-agnostic foundation
 │   ├── CLAUDE.md
-│   ├── CLAUDE.local.md.example
+│   ├── CLAUDE.local.md.example     ← Installed as CLAUDE.local.md
 │   └── .claude/
-│       ├── settings.json            ← Permissions, hooks, model config
-│       ├── agents/                  ← 6 specialist subagents
-│       ├── commands/                ← 4 slash commands
-│       ├── hooks/                   ← pre-commit + lint-on-save
-│       ├── rules/                   ← 5 path-scoped rule files
-│       └── skills/                  ← 6 situational intelligence packs
-├── profiles/                        ← Stack-specific overlays
-│   ├── nextjs/
-│   ├── go-service/
-│   ├── python-data/
-│   ├── react-native/
-│   └── fullstack-saas/
-├── docs/
-│   ├── PRINCIPLES.md                ← Why these patterns work
-│   ├── CHEATSHEET.md                ← One-page quick reference
-│   ├── CLAUDE-MD-GUIDE.md           ← Writing effective CLAUDE.md files
-│   └── LEARNING-ROADMAP.md          ← From basics to advanced
-├── workflows/
-│   ├── self-improvement.md          ← The habit that makes CLAUDE.md smarter
-│   └── prompting-patterns.md        ← 12 copy-paste prompts
-└── scripts/
-    └── init.sh                      ← Interactive bootstrap
+│       ├── settings.json
+│       ├── agents/                 ← 6 specialists
+│       ├── commands/               ← 4 slash commands
+│       ├── hooks/                  ← pre-commit + lint-on-save
+│       ├── rules/                  ← 5 path-scoped rules
+│       └── skills/                 ← 6 situational skills
+├── profiles/                       ← Stack-specific overlays
+│   ├── nextjs/   go-service/   python-data/   react-native/   fullstack-saas/
+├── docs/                           ← Principles, cheatsheet, guides
+├── workflows/                      ← Self-improvement, prompting patterns
+├── cli/index.js                    ← npx entry point
+└── scripts/init.sh                 ← Bash bootstrap
+```
+
+After install, your project gets:
+
+```
+your-project/
+├── CLAUDE.md                       ← Filled with your stack + commands
+├── CLAUDE.local.md                 ← Personal overrides (gitignored)
+└── .claude/                        ← Full Claude Code config
 ```
 
 ---
 
 ## Components
 
-### Agents — your AI team
+### Agents
 
-| Agent | Activates when |
+| Agent | Use it for |
 |---|---|
-| `code-reviewer` | Before any PR — security scan, correctness, quality |
-| `debugger` | Error messages, stack traces, unexpected behavior |
-| `test-writer` | After implementation — tests that actually catch bugs |
-| `refactorer` | Structural improvements, zero behavior change |
+| `code-reviewer` | Pre-merge scan — security, correctness, quality |
+| `debugger` | Errors, stack traces, "it doesn't work" |
+| `test-writer` | Adding tests after implementation |
+| `refactorer` | Structural improvements; behavior must not change |
 | `doc-writer` | READMEs, API docs, ADRs, runbooks |
-| `security-auditor` | Deep audit before launches, after auth/payment changes |
+| `security-auditor` | Pre-launch deep audit; auth/payment changes |
 
 ### Commands
 
 | Command | What it does |
 |---|---|
 | `/ship [message]` | typecheck → lint → test → commit → push |
-| `/fix-issue 42` | Read issue → implement → test → commit |
-| `/pr-review 12` | Fetch diff → review → post findings |
-| `/scaffold auth` | Read patterns → propose structure → create files |
+| `/fix-issue 42` | read issue → implement → test → commit |
+| `/pr-review 12` | fetch diff → review → post findings |
+| `/scaffold auth` | read patterns → propose structure → create files |
 
-### Rules — right context, not all context
+### Rules — load only when relevant
 
-Rules use `paths:` frontmatter. Working on `components/Button.tsx`? Frontend rules load. Touching `migrations/`? Database rules load. Nothing else. Context stays lean.
+Rules in `.claude/rules/` use a `paths:` frontmatter so they're scoped to specific files. Editing `components/Button.tsx`? Frontend rules apply. Touching `migrations/`? Database rules apply. Nothing else.
 
-### Hooks — things Claude cannot override
+### Hooks — guardrails that fire automatically
 
-`pre-commit.sh` blocks commits with hardcoded secrets, direct pushes to protected branches, and (optionally) failing type checks or tests. Exit code `2` = block. Exit code `0` = allow.
+- **`pre-commit.sh`** — runs before every commit. Blocks commits that contain plausible secrets or target a protected branch (`main`/`master`/`production`). Type-check and test gates are scaffolded but commented — uncomment to opt in.
+- **`lint-on-save.sh`** — runs after each Edit/Write. Scaffolded for ESLint, ruff, gofmt — uncomment the line for your language after install.
 
-### Profiles — composable stack overlays
+Exit `2` blocks; `0` allows. See [`docs/HOOKS.md`](docs/HOOKS.md).
 
-Profiles extend the base, never override it. Merge multiple for hybrid stacks:
+### Profiles — composable overlays
+
+Profiles extend base, never override it. To add another profile's rules to an already-initialised project:
 
 ```bash
-# Go backend + SaaS product concerns
-cp -r profiles/go-service/.claude/rules/* .claude/rules/
-cp -r profiles/fullstack-saas/.claude/rules/* .claude/rules/
+npx degit patilswapnilv/claude-project-template/profiles/go-service/.claude/rules .claude/_go-rules
+mv .claude/_go-rules/* .claude/rules/ && rmdir .claude/_go-rules
 ```
 
 ---
 
 ## CLAUDE.md quality rules
 
-**Keep it under 80 lines.** Past 80, Claude starts ignoring parts. Under 60 is better.
+- **Under 80 lines.** Past that, instruction adherence drops. Under 60 is better.
+- **Don't repeat what hooks enforce.** A linter handles style; CLAUDE.md is for what a linter can't see.
+- **No personality prompts.** "Be a senior engineer" wastes tokens.
+- **Pitch docs, don't embed them.** Write *"For Stripe issues, see docs/stripe.md"* — Claude will read it when relevant. Avoid `@docs/...`.
+- **Use the self-improvement loop.** After every correction, ask Claude to add the rule. Your CLAUDE.md compounds.
 
-**Don't repeat what hooks enforce.** If lint-on-save auto-formats, don't burn CLAUDE.md lines on style rules.
+[`docs/PRINCIPLES.md`](docs/PRINCIPLES.md) has the research behind every rule above.
 
-**No personality instructions.** "Be a senior engineer" wastes tokens. Claude Code has strong system-level instructions already.
+---
 
-**Don't embed docs — pitch them.** Instead of `@docs/api-guide.md` (embeds the whole file every session), write: "For Stripe issues, see docs/stripe-guide.md."
+## Troubleshooting
 
-**Use the self-improvement loop.** After every correction, say: *"Update CLAUDE.md so you don't make that mistake again."* Your CLAUDE.md gets smarter over time.
+**Claude doesn't seem to know my project.** Restart Claude Code — it loads `CLAUDE.md` on session start, not on file change. Then `grep -c '{{' CLAUDE.md` to confirm 0 placeholders remain.
 
-See `docs/PRINCIPLES.md` for the full research behind these patterns.
+**`/ship` complains about `{{TYPECHECK_COMMAND}}`.** Re-run init on a recent template version, or open `.claude/commands/ship.md` and replace the placeholder with your actual command (or delete that step).
+
+**Pre-commit secret scan doesn't catch a fake key on my Mac.** macOS BSD `grep` doesn't support `-P`. Patch the hook with the portable form in [`docs/HOOKS.md`](docs/HOOKS.md) or install ripgrep.
+
+**I want to upgrade the template.** Re-running init overwrites `.claude/` and the seeded `CLAUDE.md`. Back up your edited `CLAUDE.md` first; merge by diff.
+
+---
+
+## Upgrade
+
+1. `cd` to the template clone, `git pull`.
+2. Diff your project's `.claude/` against `base/.claude/` from the new template.
+3. Re-run init on a scratch directory and pull in only the deltas you want.
+4. Your `CLAUDE.md` edits stay yours — init won't help here; merge by hand.
+
+A `--diff` flag is on the roadmap.
+
+## Uninstall
+
+```bash
+rm -rf .claude/ CLAUDE.md CLAUDE.local.md
+sed -i.bak '/CLAUDE.local.md/d' .gitignore && rm -f .gitignore.bak
+```
+
+Global file (`~/.claude/CLAUDE.md`) and Claude Code's auto memory are unaffected — remove manually if you want a clean slate.
+
+---
+
+## FAQ
+
+**Does this work outside Claude Code?** No — agents, commands, hooks, and `paths:`-scoped rules are Claude Code primitives. The CLAUDE.md hierarchy is portable to any AI tool that reads markdown context.
+
+**Can I run init twice?** Yes, but it'll prompt before overwriting `CLAUDE.md` and `.claude/`. With `--yes`, init aborts on existing files unless you also pass `--force`.
+
+**Does it work on Windows?** Use the `npx` CLI; `init.sh` is bash and assumes a POSIX shell. WSL2 works with both.
+
+**Can I publish my customised version?** Yes — GPL-3.0. Fork it. PRs welcome on the upstream too.
 
 ---
 
 ## Contributing
 
-PRs welcome for new profiles (Vue, Elixir, Ruby/Rails, Rust, Laravel), new agents/commands/skills, and init.sh improvements. See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
+PRs welcome for new profiles (Vue, Elixir, Rails, Rust, Laravel), new agents/commands/skills, and CLI improvements. See [`CONTRIBUTING.md`](.github/CONTRIBUTING.md).
 
-**One rule:** `base/` must stay stack-agnostic. Profiles extend, never override.
+**Hard rule:** `base/` stays stack-agnostic. Profiles extend, never override.
 
 ---
 
 ## Related
 
-- [Anthropic Claude Code Docs](https://code.claude.com/docs)
-- [davila7/claude-code-templates](https://github.com/davila7/claude-code-templates) — large component library, npx CLI
-- [abhishekray07/claude-md-templates](https://github.com/abhishekray07/claude-md-templates) — CLAUDE.md best practices research
-- [luongnv89/claude-howto](https://github.com/luongnv89/claude-howto) — structured learning guide
-- [josix/awesome-claude-md](https://github.com/josix/awesome-claude-md) — real CLAUDE.md files from OSS
+- [Anthropic — Claude Code docs](https://docs.claude.com)
+- [HumanLayer — Writing a good CLAUDE.md](https://www.humanlayer.dev/blog/writing-a-good-claude-md)
+- [`davila7/claude-code-templates`](https://github.com/davila7/claude-code-templates)
+- [`abhishekray07/claude-md-templates`](https://github.com/abhishekray07/claude-md-templates)
+- [`josix/awesome-claude-md`](https://github.com/josix/awesome-claude-md)
 
 ---
 
-GPL v3 License — see [LICENSE](LICENSE) for details.
+GPL v3 — see [LICENSE](LICENSE).
