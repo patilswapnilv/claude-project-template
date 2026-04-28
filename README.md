@@ -1,106 +1,175 @@
 # claude-project-template
 
-A reusable, composable `.claude/` folder template for Claude Code projects.
+![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
+![GitHub Template](https://img.shields.io/badge/Use%20as-Template-blue)
 
-One setup. Every project. Zero repeated instructions.
+> Stop re-explaining your stack to Claude every session. One setup. Every project. Zero repeated instructions.
 
 ---
 
-## What this is
+## The problem
 
-Claude Code reads configuration from a `.claude/` folder in your project root. This repo gives you a **battle-tested base** plus **stack-specific profiles** you compose together — so Claude always has the right context without you re-explaining your conventions.
+Every new project, you spend 10–20 minutes explaining to Claude: your stack, your conventions, what not to touch, which commands to run. Then again next session. And again when a teammate opens Claude Code.
 
-## Structure
+**This template fixes that.** Install once. Claude knows your project cold, every session.
 
-```
-claude-project-template/
-├── scripts/
-│   └── init.sh               ← Interactive bootstrap (run this first)
-├── base/                     ← Stack-agnostic foundation
-│   ├── CLAUDE.md
-│   ├── CLAUDE.local.md.example
-│   └── .claude/
-│       ├── settings.json
-│       ├── agents/           ← 6 specialist subagents
-│       ├── commands/         ← Slash commands
-│       ├── hooks/            ← Enforced scripts
-│       ├── rules/            ← Path-scoped instructions
-│       └── skills/           ← Situational intelligence packs
-└── profiles/                 ← Stack-specific overlays
-    ├── nextjs/
-    ├── go-service/
-    ├── python-data/
-    ├── react-native/
-    └── fullstack-saas/
-```
+---
 
 ## Quick start
 
 ```bash
-# Clone this repo
+# Option 1 — npx (no install needed)
+npx claude-project-template
+
+# Option 2 — degit (zero deps, fastest)
+npx degit patilswapnilv/claude-project-template/base .claude-setup
+cd .claude-setup && chmod +x scripts/init.sh && ./scripts/init.sh ..
+
+# Option 3 — clone
 git clone https://github.com/patilswapnilv/claude-project-template.git
-cd claude-project-template
-
-# Run the interactive bootstrap
-chmod +x scripts/init.sh
-./scripts/init.sh /path/to/your/project
+cd claude-project-template && ./scripts/init.sh /path/to/your/project
 ```
 
-The `init.sh` script will:
-1. Ask you for project name, stack, and primary concerns
-2. Copy the base template to your project
-3. Merge the right profile overlay
-4. Fill in placeholders in `CLAUDE.md`
-5. Set correct permissions on hooks
+60 seconds later you have:
+- `CLAUDE.md` filled with your project specifics
+- 6 specialist agents (reviewer, debugger, test-writer, refactorer, doc-writer, security-auditor)
+- 4 slash commands (`/ship`, `/fix-issue`, `/pr-review`, `/scaffold`)
+- Hardened hooks (secret scanning, branch protection, lint-on-save)
+- 5 path-scoped rule files that auto-load only what's relevant
+- 6 skills (code-review, debug-session, schema-migration, security-review, frontend-design, devrel-post)
+- Stack-specific profile merged in (Next.js / Go / Python / React Native / SaaS)
 
-## Manual setup
+---
 
-If you prefer manual control:
+## The 3-level hierarchy
 
-```bash
-# Copy base to your project
-cp -r base/.claude /your/project/
-cp base/CLAUDE.md /your/project/
-cp base/CLAUDE.local.md.example /your/project/CLAUDE.local.md
+Claude Code reads instructions from three locations:
 
-# Merge a profile (example: Next.js)
-cp -r profiles/nextjs/.claude/rules/* /your/project/.claude/rules/
-cp -r profiles/nextjs/.claude/skills/* /your/project/.claude/skills/
-
-# Set hook permissions
-chmod +x /your/project/.claude/hooks/*.sh
-
-# Edit CLAUDE.md and fill in your project specifics
+```
+~/.claude/CLAUDE.md       → Global: your personal preferences, every project
+./CLAUDE.md               → Project: shared with your team, committed to git
+./CLAUDE.local.md         → Local: your overrides, gitignored, never shared
 ```
 
-## How the components work
-
-| Component | What it does | Auto or manual |
+| File | What's in it | Who edits it |
 |---|---|---|
-| `CLAUDE.md` | Project brain — loaded every session | Auto |
-| `agents/` | Specialist subagents (reviewer, debugger, etc.) | Auto-delegated |
-| `commands/` | Slash commands like `/fix-issue 42` | Manual invocation |
-| `hooks/` | Scripts that run before/after actions | Auto (via settings.json) |
-| `rules/` | Path-scoped instructions — only loads for matching files | Auto |
-| `skills/` | Situational intelligence — auto or manually invoked | Both |
-| `settings.json` | Permissions, hook wiring, model config | Auto |
-| `CLAUDE.local.md` | Personal overrides, gitignored | Auto |
+| `global/CLAUDE.md` | Personal preferences, cross-project conventions | You, once |
+| `base/CLAUDE.md` | Project brain — stack, commands, architecture | Team |
+| `base/CLAUDE.local.md.example` | Local overrides template | Each dev, privately |
 
-## Rules for contributing
+---
 
-- Keep `base/` stack-agnostic. No framework-specific imports, no language-specific linters.
-- Profile overlays should **extend**, never override, base rules.
-- Keep `CLAUDE.md` under 200 lines. Longer files reduce instruction adherence.
-- Every hook must be idempotent and exit with code `0` (allow) or `2` (block).
-- Skills must have a clear `description:` — Claude uses this to decide when to invoke.
+## What's inside
 
-## Adding your own profile
-
-```bash
-mkdir -p profiles/my-stack/.claude/{rules,skills/my-skill}
-# Add rules/my-stack.md with path: frontmatter
-# Add skills/my-skill/SKILL.md with name: and description:
+```
+claude-project-template/
+├── global/
+│   └── CLAUDE.md                    ← Copy to ~/.claude/CLAUDE.md
+├── base/                            ← Stack-agnostic foundation
+│   ├── CLAUDE.md
+│   ├── CLAUDE.local.md.example
+│   └── .claude/
+│       ├── settings.json            ← Permissions, hooks, model config
+│       ├── agents/                  ← 6 specialist subagents
+│       ├── commands/                ← 4 slash commands
+│       ├── hooks/                   ← pre-commit + lint-on-save
+│       ├── rules/                   ← 5 path-scoped rule files
+│       └── skills/                  ← 6 situational intelligence packs
+├── profiles/                        ← Stack-specific overlays
+│   ├── nextjs/
+│   ├── go-service/
+│   ├── python-data/
+│   ├── react-native/
+│   └── fullstack-saas/
+├── docs/
+│   ├── PRINCIPLES.md                ← Why these patterns work
+│   ├── CHEATSHEET.md                ← One-page quick reference
+│   ├── CLAUDE-MD-GUIDE.md           ← Writing effective CLAUDE.md files
+│   └── LEARNING-ROADMAP.md          ← From basics to advanced
+├── workflows/
+│   ├── self-improvement.md          ← The habit that makes CLAUDE.md smarter
+│   └── prompting-patterns.md        ← 12 copy-paste prompts
+└── scripts/
+    └── init.sh                      ← Interactive bootstrap
 ```
 
-Then send a PR.
+---
 
+## Components
+
+### Agents — your AI team
+
+| Agent | Activates when |
+|---|---|
+| `code-reviewer` | Before any PR — security scan, correctness, quality |
+| `debugger` | Error messages, stack traces, unexpected behavior |
+| `test-writer` | After implementation — tests that actually catch bugs |
+| `refactorer` | Structural improvements, zero behavior change |
+| `doc-writer` | READMEs, API docs, ADRs, runbooks |
+| `security-auditor` | Deep audit before launches, after auth/payment changes |
+
+### Commands
+
+| Command | What it does |
+|---|---|
+| `/ship [message]` | typecheck → lint → test → commit → push |
+| `/fix-issue 42` | Read issue → implement → test → commit |
+| `/pr-review 12` | Fetch diff → review → post findings |
+| `/scaffold auth` | Read patterns → propose structure → create files |
+
+### Rules — right context, not all context
+
+Rules use `paths:` frontmatter. Working on `components/Button.tsx`? Frontend rules load. Touching `migrations/`? Database rules load. Nothing else. Context stays lean.
+
+### Hooks — things Claude cannot override
+
+`pre-commit.sh` blocks commits with hardcoded secrets, direct pushes to protected branches, and (optionally) failing type checks or tests. Exit code `2` = block. Exit code `0` = allow.
+
+### Profiles — composable stack overlays
+
+Profiles extend the base, never override it. Merge multiple for hybrid stacks:
+
+```bash
+# Go backend + SaaS product concerns
+cp -r profiles/go-service/.claude/rules/* .claude/rules/
+cp -r profiles/fullstack-saas/.claude/rules/* .claude/rules/
+```
+
+---
+
+## CLAUDE.md quality rules
+
+**Keep it under 80 lines.** Past 80, Claude starts ignoring parts. Under 60 is better.
+
+**Don't repeat what hooks enforce.** If lint-on-save auto-formats, don't burn CLAUDE.md lines on style rules.
+
+**No personality instructions.** "Be a senior engineer" wastes tokens. Claude Code has strong system-level instructions already.
+
+**Don't embed docs — pitch them.** Instead of `@docs/api-guide.md` (embeds the whole file every session), write: "For Stripe issues, see docs/stripe-guide.md."
+
+**Use the self-improvement loop.** After every correction, say: *"Update CLAUDE.md so you don't make that mistake again."* Your CLAUDE.md gets smarter over time.
+
+See `docs/PRINCIPLES.md` for the full research behind these patterns.
+
+---
+
+## Contributing
+
+PRs welcome for new profiles (Vue, Elixir, Ruby/Rails, Rust, Laravel), new agents/commands/skills, and init.sh improvements. See [CONTRIBUTING.md](.github/CONTRIBUTING.md).
+
+**One rule:** `base/` must stay stack-agnostic. Profiles extend, never override.
+
+---
+
+## Related
+
+- [Anthropic Claude Code Docs](https://code.claude.com/docs)
+- [davila7/claude-code-templates](https://github.com/davila7/claude-code-templates) — large component library, npx CLI
+- [abhishekray07/claude-md-templates](https://github.com/abhishekray07/claude-md-templates) — CLAUDE.md best practices research
+- [luongnv89/claude-howto](https://github.com/luongnv89/claude-howto) — structured learning guide
+- [josix/awesome-claude-md](https://github.com/josix/awesome-claude-md) — real CLAUDE.md files from OSS
+
+---
+
+MIT License

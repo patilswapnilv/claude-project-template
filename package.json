@@ -1,0 +1,45 @@
+{
+  "name": "claude-project-template",
+  "version": "1.0.0",
+  "description": "Composable Claude Code .claude/ folder template with stack-specific profiles",
+  "main": "cli/index.js",
+  "bin": {
+    "claude-project-template": "./cli/index.js"
+  },
+  "scripts": {
+    "test": "node cli/index.js --dry-run"
+  },
+  "keywords": [
+    "claude",
+    "claude-code",
+    "claude-md",
+    "ai-coding",
+    "developer-tools",
+    "template",
+    "dotfiles",
+    "anthropic"
+  ],
+  "author": "Swapnil Patil <swapnil@swapnilpatil.in>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/patilswapnilv/claude-project-template.git"
+  },
+  "homepage": "https://github.com/patilswapnilv/claude-project-template#readme",
+  "bugs": {
+    "url": "https://github.com/patilswapnilv/claude-project-template/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "cli/",
+    "base/",
+    "profiles/",
+    "global/",
+    "docs/",
+    "workflows/",
+    "scripts/"
+  ],
+  "dependencies": {}
+}
