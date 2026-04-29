@@ -5,6 +5,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Hook smoke test
+        run: ./tests/hooks-test.sh
       - name: Forbid brace-expansion artifacts
         run: |
           if git ls-files | grep -E '[{}]'; then

@@ -41,10 +41,10 @@ echo "🔍 Running pre-commit checks..."
 echo "  → Scanning for secrets..."
 STAGED_FILES=$(git diff --cached --name-only || true)
 if [ -n "$STAGED_FILES" ]; then
-  # Check for common secret patterns in staged files
-  SECRET_PATTERNS="(sk-[a-zA-Z0-9]{32,}|api[_-]?key\s*=\s*['\"][^'\"]+['\"]|password\s*=\s*['\"][^'\"]+['\"]|secret\s*=\s*['\"][^'\"]+['\"]|token\s*=\s*['\"][^'\"]+['\"])"
-  
-  if git diff --cached | grep -iP "$SECRET_PATTERNS" 2>/dev/null; then
+  # Portable extended-regex pattern (BSD + GNU grep).
+  # Patterns: OpenAI-style sk- keys, and key=value pairs for api_key/password/secret/token.
+  PATTERN='(sk-[A-Za-z0-9]{32,}|(api[-_]?key|password|secret|token)[[:space:]]*=[[:space:]]*["'"'"'][^"'"'"'[:space:]]+["'"'"'])'
+  if git diff --cached -U0 | grep -iE "$PATTERN" >/dev/null; then
     echo "❌ Possible secret detected in staged changes. Review before committing."
     echo "   If this is a false positive, use: git commit --no-verify"
     exit 2
