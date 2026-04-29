@@ -101,7 +101,9 @@ If it's still over 80 after those cuts, the remaining content is probably import
 
 ## Path-scoped rules vs. CLAUDE.md
 
-Rules in `.claude/rules/` with `paths:` frontmatter load only when Claude is working in matching files. Use them for:
+Rules in `.claude/rules/` with `paths:` frontmatter load only when Claude is working in matching files. See: https://code.claude.com/docs/en/memory#path-specific-rules
+
+Use them for:
 
 - Frontend rules (load for component files only)
 - Database rules (load for migration files only)

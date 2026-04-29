@@ -42,6 +42,8 @@ One page. Print it. Bookmark it.
 
 ## Rules file template
 
+See: https://code.claude.com/docs/en/memory#path-specific-rules
+
 ```yaml
 ---
 paths:
