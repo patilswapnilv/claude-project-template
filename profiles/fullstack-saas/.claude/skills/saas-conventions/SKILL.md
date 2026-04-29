@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: saas-conventions
 description: Fullstack SaaS-specific patterns — auth flows, billing integration, multi-tenancy, and feature flags. Auto-invoked when working on subscription management, user onboarding, or tenant-scoped features.
-user-invocable: true
 ---
 
 # SaaS Conventions Skill

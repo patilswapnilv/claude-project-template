@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: frontend-design
 description: Apply structured design decisions to any UI component or page. Auto-invoked when building or styling UI elements, landing pages, dashboards, or any visual component. Ensures consistency and avoids generic-looking output.
-user-invocable: true
 ---
 
 # Frontend Design Skill

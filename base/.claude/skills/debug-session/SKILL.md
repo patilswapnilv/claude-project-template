@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: debug-session
 description: Structured debugging protocol. Auto-invoked when error messages, stack traces, or "it doesn't work" style descriptions are present. Prevents random trial-and-error.
-user-invocable: true
 ---
 
 # Debug Session Skill
