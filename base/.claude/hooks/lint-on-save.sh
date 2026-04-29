@@ -27,9 +27,20 @@ if [ -z "$EDITED_FILE" ]; then
   EDITED_FILE="${1:-}"
 fi
 
+if [ -z "$EDITED_FILE" ]; then
+  exit 0
+fi
+
 case "$EDITED_FILE" in
-  *.ts|*.tsx|*.js|*.jsx)  {{LINT_ON_SAVE_JS}}  ;;
-  *.py)                    {{LINT_ON_SAVE_PY}}  ;;
-  *.go)                    {{LINT_ON_SAVE_GO}}  ;;
+  *.ts|*.tsx|*.js|*.jsx)
+    {{LINT_ON_SAVE_JS}}
+    ;;
+  *.py)
+    {{LINT_ON_SAVE_PY}}
+    ;;
+  *.go)
+    {{LINT_ON_SAVE_GO}}
+    ;;
 esac
+
 exit 0

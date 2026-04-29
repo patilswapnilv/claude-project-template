@@ -3,6 +3,8 @@
 ![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)
 ![Status: v1.0 — early](https://img.shields.io/badge/status-v1.0--early-orange.svg)
+[![asciicast](https://img.shields.io/badge/asciinema-watch-blue)](docs/demo.cast)
+![Demo](docs/demo.gif)
 
 > A composable Claude Code setup — global preferences, project brain, and stack overlays — installed in one command. Claude knows your stack on the first prompt of every session.
 
