@@ -25,9 +25,6 @@ Example: Next.js 14, TypeScript, Tailwind CSS, Supabase, Vercel
 {{TEST_COMMAND}}         # e.g. npm test
 {{LINT_COMMAND}}         # e.g. npm run lint
 
-# Database
-{{DB_MIGRATE_COMMAND}}   # e.g. npx prisma migrate dev
-{{DB_STUDIO_COMMAND}}    # e.g. npx prisma studio
 ```
 
 ## Repository Layout

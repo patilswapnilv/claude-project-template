@@ -88,12 +88,12 @@ ${c.bold}Options:${c.reset}
 
 // ─── Available profiles ────────────────────────────────────────────────────
 const PROFILES = [
-  { key: 'nextjs',        label: 'Next.js 13+ (App Router)',          devCmd: 'npm run dev',       buildCmd: 'npm run build', testCmd: 'npm test',           lintCmd: 'npm run lint' },
-  { key: 'go-service',    label: 'Go service or CLI',                  devCmd: 'go run ./cmd/...',  buildCmd: 'go build ./...', testCmd: 'go test -race ./...', lintCmd: 'golangci-lint run' },
-  { key: 'python-data',   label: 'Python data pipeline or script',     devCmd: 'python src/main.py', buildCmd: 'pip install -e .', testCmd: 'pytest',          lintCmd: 'ruff check .' },
-  { key: 'react-native',  label: 'React Native (Expo or bare)',        devCmd: 'npx expo start',   buildCmd: 'npx expo build', testCmd: 'npm test',           lintCmd: 'npm run lint' },
-  { key: 'fullstack-saas', label: 'Fullstack SaaS (multi-concern)',    devCmd: 'npm run dev',       buildCmd: 'npm run build', testCmd: 'npm test',           lintCmd: 'npm run lint' },
-  { key: 'none',           label: 'Base only (no stack profile)',       devCmd: '',                  buildCmd: '',              testCmd: '',                   lintCmd: '' },
+  { key: 'nextjs',        label: 'Next.js 13+ (App Router)',          devCmd: 'npm run dev',       buildCmd: 'npm run build', testCmd: 'npm test',           lintCmd: 'npm run lint',      typecheckCmd: 'npx tsc --noEmit' },
+  { key: 'go-service',    label: 'Go service or CLI',                  devCmd: 'go run ./cmd/...',  buildCmd: 'go build ./...', testCmd: 'go test -race ./...', lintCmd: 'golangci-lint run', typecheckCmd: 'go vet ./...' },
+  { key: 'python-data',   label: 'Python data pipeline or script',     devCmd: 'python src/main.py', buildCmd: 'pip install -e .', testCmd: 'pytest',          lintCmd: 'ruff check .',      typecheckCmd: 'mypy .' },
+  { key: 'react-native',  label: 'React Native (Expo or bare)',        devCmd: 'npx expo start',   buildCmd: 'npx expo build', testCmd: 'npm test',           lintCmd: 'npm run lint',      typecheckCmd: 'npx tsc --noEmit' },
+  { key: 'fullstack-saas', label: 'Fullstack SaaS (multi-concern)',    devCmd: 'npm run dev',       buildCmd: 'npm run build', testCmd: 'npm test',           lintCmd: 'npm run lint',      typecheckCmd: 'npx tsc --noEmit' },
+  { key: 'none',           label: 'Base only (no stack profile)',       devCmd: '',                  buildCmd: '',              testCmd: '',                   lintCmd: '',                  typecheckCmd: '' },
 ];
 
 // ─── Readline helper ───────────────────────────────────────────────────────
@@ -247,6 +247,7 @@ async function main() {
   const buildCmd = flags.yes ? selectedProfile.buildCmd : await ask(rl, 'Build command:', selectedProfile.buildCmd);
   const testCmd = flags.yes ? selectedProfile.testCmd : await ask(rl, 'Test command:', selectedProfile.testCmd);
   const lintCmd = flags.yes ? selectedProfile.lintCmd : await ask(rl, 'Lint command:', selectedProfile.lintCmd);
+  const typecheckCmd = flags.yes ? selectedProfile.typecheckCmd : await ask(rl, 'Typecheck command:', selectedProfile.typecheckCmd);
 
   if (rl) rl.close();
 
@@ -293,6 +294,7 @@ async function main() {
       '{{BUILD_COMMAND}}': buildCmd,
       '{{TEST_COMMAND}}': testCmd,
       '{{LINT_COMMAND}}': lintCmd,
+      '{{TYPECHECK_COMMAND}}': typecheckCmd,
       '{{LIST_YOUR_STACK_HERE}}': selectedProfile.label,
     });
     ok('Filled placeholders in CLAUDE.md');
@@ -319,6 +321,7 @@ async function main() {
           '{{TEST_COMMAND}}': testCmd,
           '{{LINT_COMMAND}}': lintCmd,
           '{{BUILD_COMMAND}}': buildCmd,
+          '{{TYPECHECK_COMMAND}}': typecheckCmd,
         });
       }
     }

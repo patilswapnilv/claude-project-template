@@ -100,30 +100,42 @@ case "$PROFILE" in
     BUILD_CMD_DEFAULT="npm run build"
     TEST_CMD_DEFAULT="npm test"
     LINT_CMD_DEFAULT="npm run lint"
+    TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
     ;;
   go-service)
     DEV_CMD_DEFAULT="go run ./cmd/..."
     BUILD_CMD_DEFAULT="go build ./..."
     TEST_CMD_DEFAULT="go test -race ./..."
     LINT_CMD_DEFAULT="golangci-lint run"
+    TYPECHECK_CMD_DEFAULT="go vet ./..."
     ;;
   python-data)
     DEV_CMD_DEFAULT="python src/main.py"
     BUILD_CMD_DEFAULT="pip install -e ."
     TEST_CMD_DEFAULT="pytest"
     LINT_CMD_DEFAULT="ruff check ."
+    TYPECHECK_CMD_DEFAULT="mypy ."
     ;;
   react-native)
     DEV_CMD_DEFAULT="npx expo start"
     BUILD_CMD_DEFAULT="npx expo build"
     TEST_CMD_DEFAULT="npm test"
     LINT_CMD_DEFAULT="npm run lint"
+    TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
+    ;;
+  fullstack-saas)
+    DEV_CMD_DEFAULT="npm run dev"
+    BUILD_CMD_DEFAULT="npm run build"
+    TEST_CMD_DEFAULT="npm test"
+    LINT_CMD_DEFAULT="npm run lint"
+    TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
     ;;
   *)
     DEV_CMD_DEFAULT=""
     BUILD_CMD_DEFAULT=""
     TEST_CMD_DEFAULT=""
     LINT_CMD_DEFAULT=""
+    TYPECHECK_CMD_DEFAULT=""
     ;;
 esac
 
@@ -142,6 +154,10 @@ TEST_CMD="${TEST_CMD:-$TEST_CMD_DEFAULT}"
 prompt "Lint command [$LINT_CMD_DEFAULT]:"
 read -r LINT_CMD
 LINT_CMD="${LINT_CMD:-$LINT_CMD_DEFAULT}"
+
+prompt "Typecheck command [$TYPECHECK_CMD_DEFAULT]:"
+read -r TYPECHECK_CMD
+TYPECHECK_CMD="${TYPECHECK_CMD:-$TYPECHECK_CMD_DEFAULT}"
 
 # ─── Copy base ────────────────────────────────────────────────────────────
 print_header "Installing files"
@@ -180,6 +196,7 @@ sed -i.bak \
   -e "s|{{BUILD_COMMAND}}|$BUILD_CMD|g" \
   -e "s|{{TEST_COMMAND}}|$TEST_CMD|g" \
   -e "s|{{LINT_COMMAND}}|$LINT_CMD|g" \
+  -e "s|{{TYPECHECK_COMMAND}}|$TYPECHECK_CMD|g" \
   "$CLAUDE_MD"
 
 rm -f "$CLAUDE_MD.bak"
@@ -197,6 +214,7 @@ for cmd in "$TARGET/.claude/commands/"*.md; do
     -e "s|{{TEST_COMMAND}}|$TEST_CMD|g" \
     -e "s|{{LINT_COMMAND}}|$LINT_CMD|g" \
     -e "s|{{BUILD_COMMAND}}|$BUILD_CMD|g" \
+    -e "s|{{TYPECHECK_COMMAND}}|$TYPECHECK_CMD|g" \
     "$cmd"
   rm -f "$cmd.bak"
 done

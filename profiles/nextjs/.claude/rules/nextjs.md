@@ -48,3 +48,10 @@ paths:
 - Server-only vars: no `NEXT_PUBLIC_` prefix — they never reach the browser
 - Browser-safe vars: `NEXT_PUBLIC_` prefix — but treat them as public
 - Access with `process.env.VAR_NAME` — validate at startup, not at runtime
+
+## Database command examples
+```bash
+# Prisma (common Next.js stack)
+npx prisma migrate dev
+npx prisma studio
+```

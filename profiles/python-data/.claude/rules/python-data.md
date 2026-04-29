@@ -58,3 +58,10 @@ notebooks/           ← exploratory only, not production code
 - Notebooks are for exploration only — production code lives in `src/`
 - Clear output before committing notebooks to version control
 - Notebook cells must be runnable top-to-bottom with a fresh kernel
+
+## Database command examples
+```bash
+# Alembic + SQLAlchemy (common Python data stack)
+alembic upgrade head
+python -m streamlit run scripts/db_studio.py
+```
