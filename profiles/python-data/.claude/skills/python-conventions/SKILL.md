@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: python-conventions
 description: Python-specific idioms, data pipeline patterns, and project conventions. Auto-invoked when building Python scripts, data pipelines, or packages.
-user-invocable: true
 ---
 
 # Python Conventions Skill

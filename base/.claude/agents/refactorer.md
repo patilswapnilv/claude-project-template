@@ -1,8 +1,9 @@
 ---
+# See: https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields
 name: refactorer
 description: Improves code structure, readability, and maintainability without changing behavior. Use before adding new features to messy code, or after a fast-iteration sprint. Always run tests before and after.
 tools: Read, Glob, Grep, Bash, Write, Edit
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 maxTurns: 30
 ---

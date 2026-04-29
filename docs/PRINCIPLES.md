@@ -65,6 +65,8 @@ Claude Code loads these **on demand** — only when it navigates to that directo
 
 ## The rules/ folder — path-scoped instructions
 
+See: https://code.claude.com/docs/en/memory#path-specific-rules
+
 Rules in `.claude/rules/` use YAML frontmatter to scope to specific file paths:
 
 ```yaml

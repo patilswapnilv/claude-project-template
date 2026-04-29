@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: code-review
 description: Apply structured code review to any code snippet or file. Auto-invoked when asked to "review", "check", or "audit" code. Also invoked when code quality issues are suspected.
-user-invocable: true
 ---
 
 # Code Review Skill

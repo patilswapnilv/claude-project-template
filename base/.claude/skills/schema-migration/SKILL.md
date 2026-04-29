@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: schema-migration
 description: Guides the full lifecycle of a database schema change — design, migration file, rollback, and deployment checklist. Auto-invoked when touching database schema, migration files, or asking about database changes.
-user-invocable: true
 ---
 
 # Schema Migration Skill

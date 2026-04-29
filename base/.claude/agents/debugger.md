@@ -1,8 +1,9 @@
 ---
+# See: https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields
 name: debugger
 description: Systematic bug investigation. Use when you have a specific error, unexpected behavior, or failing test and want a structured root cause analysis rather than trial-and-error.
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 maxTurns: 30
 ---

@@ -1,8 +1,9 @@
 ---
+# See: https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields
 name: code-reviewer
 description: Reviews code for bugs, security issues, and quality before merge. Invoke before any PR or commit touching critical paths.
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 maxTurns: 20
 ---

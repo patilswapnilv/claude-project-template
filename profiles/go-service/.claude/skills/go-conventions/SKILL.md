@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: go-conventions
 description: Go-specific idioms, patterns, and project structure conventions. Auto-invoked when building Go services, CLIs, or packages.
-user-invocable: true
 ---
 
 # Go Conventions Skill

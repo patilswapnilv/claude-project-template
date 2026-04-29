@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: devrel-post
 description: Turns a technical feature, concept, or release into developer-facing content — LinkedIn post, blog intro, Twitter/X thread, or README section. Auto-invoked when asked to "write about", "explain for developers", "create a post about", or "draft announcement" for a technical topic.
-user-invocable: true
 ---
 
 # DevRel Content Skill

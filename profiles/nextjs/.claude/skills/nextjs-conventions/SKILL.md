@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: nextjs-conventions
 description: Next.js-specific patterns and conventions. Auto-invoked when working on Next.js app structure, routing, data fetching, or deployment configuration.
-user-invocable: true
 ---
 
 # Next.js Conventions Skill

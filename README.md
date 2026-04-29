@@ -160,7 +160,7 @@ your-project/
 
 ### Rules — load only when relevant
 
-Rules in `.claude/rules/` use a `paths:` frontmatter so they're scoped to specific files. Editing `components/Button.tsx`? Frontend rules apply. Touching `migrations/`? Database rules apply. Nothing else.
+Rules in `.claude/rules/` use a `paths:` frontmatter so they're scoped to specific files. Editing `components/Button.tsx`? Frontend rules apply. Touching `migrations/`? Database rules apply. Nothing else. See: https://code.claude.com/docs/en/memory#path-specific-rules
 
 ### Hooks — guardrails that fire automatically
 

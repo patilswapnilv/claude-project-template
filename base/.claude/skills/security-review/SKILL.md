@@ -1,7 +1,7 @@
 ---
+# See: https://code.claude.com/docs/en/skills.md#frontmatter-reference
 name: security-review
 description: Quick security check for any code, config, or infrastructure change. Auto-invoked when touching auth, payments, file uploads, external APIs, or user data. Lighter than the security-auditor agent — use for per-change checks.
-user-invocable: true
 ---
 
 # Security Review Skill

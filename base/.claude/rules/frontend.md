@@ -1,4 +1,5 @@
 ---
+# See: https://code.claude.com/docs/en/memory#path-specific-rules
 paths:
   - "src/components/**/*.tsx"
   - "src/components/**/*.jsx"
