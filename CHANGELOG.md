@@ -29,4 +29,4 @@ Format: [Semantic Versioning](https://semver.org/)
 - Composable profile system: profiles extend base, never override
 - 3-level hierarchy: `~/.claude/CLAUDE.md` → `./CLAUDE.md` → `./CLAUDE.local.md`
 - CLI: zero external dependencies (pure Node.js stdlib) to keep `npx` fast
-- `init.sh` and `cli/index.js` are parallel implementations of the same logic — bash for local use, Node.js for npx
+- `scripts/init.sh` now delegates to `cli/index.js` as the canonical implementation; `scripts/init.bash-fallback.sh` remains the Node-less fallback path
