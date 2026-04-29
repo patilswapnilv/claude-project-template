@@ -1,0 +1,50 @@
+{
+  "nextjs": {
+    "label": "Next.js 13+ (App Router)",
+    "devCmd": "npm run dev",
+    "buildCmd": "npm run build",
+    "testCmd": "npm test",
+    "lintCmd": "npm run lint",
+    "typecheckCmd": "npx tsc --noEmit"
+  },
+  "go-service": {
+    "label": "Go service or CLI",
+    "devCmd": "go run ./cmd/...",
+    "buildCmd": "go build ./...",
+    "testCmd": "go test -race ./...",
+    "lintCmd": "golangci-lint run",
+    "typecheckCmd": "go vet ./..."
+  },
+  "python-data": {
+    "label": "Python data pipeline or script",
+    "devCmd": "python src/main.py",
+    "buildCmd": "pip install -e .",
+    "testCmd": "pytest",
+    "lintCmd": "ruff check .",
+    "typecheckCmd": "mypy ."
+  },
+  "react-native": {
+    "label": "React Native (Expo or bare)",
+    "devCmd": "npx expo start",
+    "buildCmd": "npx expo build",
+    "testCmd": "npm test",
+    "lintCmd": "npm run lint",
+    "typecheckCmd": "npx tsc --noEmit"
+  },
+  "fullstack-saas": {
+    "label": "Fullstack SaaS (multi-concern)",
+    "devCmd": "npm run dev",
+    "buildCmd": "npm run build",
+    "testCmd": "npm test",
+    "lintCmd": "npm run lint",
+    "typecheckCmd": "npx tsc --noEmit"
+  },
+  "none": {
+    "label": "Base only (no stack profile)",
+    "devCmd": "",
+    "buildCmd": "",
+    "testCmd": "",
+    "lintCmd": "",
+    "typecheckCmd": ""
+  }
+}
