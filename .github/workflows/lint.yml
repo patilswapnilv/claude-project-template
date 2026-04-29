@@ -1,0 +1,19 @@
+name: lint
+on: [push, pull_request]
+jobs:
+  filename-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Forbid brace-expansion artifacts
+        run: |
+          if git ls-files | grep -E '[{}]'; then
+            echo "Filenames containing { or } detected — likely shell brace-expansion artifacts."
+            exit 1
+          fi
+      - name: Forbid committed .DS_Store
+        run: |
+          if git ls-files | grep -E '(^|/)\.DS_Store$'; then
+            echo ".DS_Store committed — add to .gitignore and untrack."
+            exit 1
+          fi
