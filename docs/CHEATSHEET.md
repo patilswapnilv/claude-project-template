@@ -59,12 +59,14 @@ paths:
 
 ## Agent frontmatter
 
+See: https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields
+
 ```yaml
 ---
 name: my-agent
 description: [What it does — Claude uses this to decide when to invoke it]
 tools: Read, Glob, Grep, Bash, Write, Edit
-model: sonnet          # sonnet | opus | haiku
+model: claude-sonnet-4-6  # prefer pinned full model IDs for deterministic behavior
 memory: project
 maxTurns: 20
 ---

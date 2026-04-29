@@ -1,8 +1,9 @@
 ---
+# See: https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields
 name: doc-writer
 description: Writes and maintains technical documentation — READMEs, API docs, inline comments, architecture decision records (ADRs), and runbooks. Use when code is written and needs to be explained to humans.
 tools: Read, Glob, Grep, Write, Edit
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 maxTurns: 20
 ---

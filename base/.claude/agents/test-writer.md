@@ -1,8 +1,9 @@
 ---
+# See: https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields
 name: test-writer
 description: Writes comprehensive tests for existing code. Use after implementing a feature, before a refactor, or when coverage is insufficient. Not for TDD — use your coding workflow for that.
 tools: Read, Glob, Grep, Bash, Write
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 maxTurns: 25
 ---

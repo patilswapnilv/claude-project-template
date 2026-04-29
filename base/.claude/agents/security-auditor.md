@@ -1,8 +1,9 @@
 ---
+# See: https://code.claude.com/docs/en/sub-agents#supported-frontmatter-fields
 name: security-auditor
 description: Deep security audit of code, dependencies, and configuration. Use before production launches, after adding auth/payment flows, or on a regular schedule. More thorough than the code-reviewer's security scan.
 tools: Read, Glob, Grep, Bash
-model: sonnet
+model: claude-sonnet-4-6
 memory: project
 maxTurns: 25
 ---
