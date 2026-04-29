@@ -164,6 +164,7 @@ set_hardcoded_defaults() {
       TEST_CMD_DEFAULT="npm test"
       LINT_CMD_DEFAULT="npm run lint"
       TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
+      LINT_ON_SAVE_CMD_DEFAULT='npx eslint "$EDITED_FILE" --fix --quiet'
       ;;
     go-service)
       DEV_CMD_DEFAULT="go run ./cmd/..."
@@ -171,6 +172,7 @@ set_hardcoded_defaults() {
       TEST_CMD_DEFAULT="go test -race ./..."
       LINT_CMD_DEFAULT="golangci-lint run"
       TYPECHECK_CMD_DEFAULT="go vet ./..."
+      LINT_ON_SAVE_CMD_DEFAULT='gofmt -w "$EDITED_FILE"'
       ;;
     python-data)
       DEV_CMD_DEFAULT="python src/main.py"
@@ -178,6 +180,7 @@ set_hardcoded_defaults() {
       TEST_CMD_DEFAULT="pytest"
       LINT_CMD_DEFAULT="ruff check ."
       TYPECHECK_CMD_DEFAULT="mypy ."
+      LINT_ON_SAVE_CMD_DEFAULT='ruff check "$EDITED_FILE" --fix --quiet'
       ;;
     react-native)
       DEV_CMD_DEFAULT="npx expo start"
@@ -185,6 +188,7 @@ set_hardcoded_defaults() {
       TEST_CMD_DEFAULT="npm test"
       LINT_CMD_DEFAULT="npm run lint"
       TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
+      LINT_ON_SAVE_CMD_DEFAULT='npx eslint "$EDITED_FILE" --fix --quiet'
       ;;
     fullstack-saas)
       DEV_CMD_DEFAULT="npm run dev"
@@ -192,6 +196,7 @@ set_hardcoded_defaults() {
       TEST_CMD_DEFAULT="npm test"
       LINT_CMD_DEFAULT="npm run lint"
       TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
+      LINT_ON_SAVE_CMD_DEFAULT='npx eslint "$EDITED_FILE" --fix --quiet'
       ;;
     *)
       DEV_CMD_DEFAULT=""
@@ -199,6 +204,7 @@ set_hardcoded_defaults() {
       TEST_CMD_DEFAULT=""
       LINT_CMD_DEFAULT=""
       TYPECHECK_CMD_DEFAULT=""
+      LINT_ON_SAVE_CMD_DEFAULT=""
       ;;
   esac
 }
@@ -209,19 +215,37 @@ LOADED_FROM_JSON=0
 
 if command -v node >/dev/null 2>&1 && [ -f "$PROFILES_JSON" ]; then
   PROFILE_DATA="$(
-    node -e "const fs=require('fs');const [file,key]=process.argv.slice(1);const data=JSON.parse(fs.readFileSync(file,'utf8'));const p=data[key]||data.none;if(!p){process.exit(1);}process.stdout.write([p.devCmd,p.buildCmd,p.testCmd,p.lintCmd,p.typecheckCmd].join('\u001f'));" \
+    node -e "const fs=require('fs');const [file,key]=process.argv.slice(1);const data=JSON.parse(fs.readFileSync(file,'utf8'));const p=data[key]||data.none;if(!p){process.exit(1);}process.stdout.write([p.devCmd,p.buildCmd,p.testCmd,p.lintCmd,p.typecheckCmd,p.lintOnSaveCmd||''].join('\u001f'));" \
       "$PROFILES_JSON" \
       "$PROFILE_KEY" \
       2>/dev/null || true
   )"
   if [ -n "$PROFILE_DATA" ]; then
-    IFS=$'\x1f' read -r DEV_CMD_DEFAULT BUILD_CMD_DEFAULT TEST_CMD_DEFAULT LINT_CMD_DEFAULT TYPECHECK_CMD_DEFAULT <<< "$PROFILE_DATA"
+    IFS=$'\x1f' read -r DEV_CMD_DEFAULT BUILD_CMD_DEFAULT TEST_CMD_DEFAULT LINT_CMD_DEFAULT TYPECHECK_CMD_DEFAULT LINT_ON_SAVE_CMD_DEFAULT <<< "$PROFILE_DATA"
     LOADED_FROM_JSON=1
   fi
 fi
 
 if [ "$LOADED_FROM_JSON" -ne 1 ]; then
   set_hardcoded_defaults "$PROFILE_KEY"
+fi
+
+LINT_ON_SAVE_JS=':'
+LINT_ON_SAVE_PY=':'
+LINT_ON_SAVE_GO=':'
+if [ -n "$LINT_ON_SAVE_CMD_DEFAULT" ]; then
+  LINT_ON_SAVE_CMD_BEST_EFFORT="$LINT_ON_SAVE_CMD_DEFAULT 2>/dev/null || true"
+  case "$LINT_ON_SAVE_CMD_DEFAULT" in
+    *eslint*)
+      LINT_ON_SAVE_JS="$LINT_ON_SAVE_CMD_BEST_EFFORT"
+      ;;
+    ruff*|*' black '*)
+      LINT_ON_SAVE_PY="$LINT_ON_SAVE_CMD_BEST_EFFORT"
+      ;;
+    gofmt*)
+      LINT_ON_SAVE_GO="$LINT_ON_SAVE_CMD_BEST_EFFORT"
+      ;;
+  esac
 fi
 
 prompt "Dev command [$DEV_CMD_DEFAULT]:"
@@ -289,7 +313,12 @@ print_success "Filled placeholders in CLAUDE.md"
 
 # Update hook scripts with actual test command
 for hook in "$TARGET/.claude/hooks/"*.sh; do
-  sed -i.bak "s|{{TEST_COMMAND}}|$TEST_CMD|g" "$hook"
+  sed -i.bak \
+    -e "s|{{TEST_COMMAND}}|$TEST_CMD|g" \
+    -e "s|{{LINT_ON_SAVE_JS}}|$LINT_ON_SAVE_JS|g" \
+    -e "s|{{LINT_ON_SAVE_PY}}|$LINT_ON_SAVE_PY|g" \
+    -e "s|{{LINT_ON_SAVE_GO}}|$LINT_ON_SAVE_GO|g" \
+    "$hook"
   rm -f "$hook.bak"
 done
 

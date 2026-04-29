@@ -165,7 +165,7 @@ Rules in `.claude/rules/` use a `paths:` frontmatter so they're scoped to specif
 ### Hooks — guardrails that fire automatically
 
 - **`pre-commit.sh`** — runs before every commit. Blocks commits that contain plausible secrets or target a protected branch (`main`/`master`/`production`). Type-check and test gates are scaffolded but commented — uncomment to opt in.
-- **`lint-on-save.sh`** — runs after each Edit/Write. Scaffolded for ESLint, ruff, gofmt — uncomment the line for your language after install.
+- **`lint-on-save.sh`** — runs after each Edit/Write. Configured automatically at install time for ESLint, ruff, or gofmt based on your selected profile (base-only installs stay no-op).
 
 Exit `2` blocks; `0` allows. See [`docs/HOOKS.md`](docs/HOOKS.md).
 
