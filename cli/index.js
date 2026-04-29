@@ -189,7 +189,7 @@ function getLintOnSaveMarkerValues(profileLintOnSaveCmd = '') {
 
   if (command.includes('eslint')) {
     markerValues['{{LINT_ON_SAVE_JS}}'] = bestEffortCommand;
-  } else if (command.startsWith('ruff ') || command.includes(' black ')) {
+  } else if (/^\s*(ruff|black)\b/.test(command) || /\s(ruff|black)\b/.test(command)) {
     markerValues['{{LINT_ON_SAVE_PY}}'] = bestEffortCommand;
   } else if (command.startsWith('gofmt')) {
     markerValues['{{LINT_ON_SAVE_GO}}'] = bestEffortCommand;

@@ -239,7 +239,7 @@ if [ -n "$LINT_ON_SAVE_CMD_DEFAULT" ]; then
     *eslint*)
       LINT_ON_SAVE_JS="$LINT_ON_SAVE_CMD_BEST_EFFORT"
       ;;
-    ruff*|*' black '*)
+    ruff*|black*|*' ruff '*|*' black '*)
       LINT_ON_SAVE_PY="$LINT_ON_SAVE_CMD_BEST_EFFORT"
       ;;
     gofmt*)
