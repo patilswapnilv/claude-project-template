@@ -44,7 +44,7 @@ if [ -n "$STAGED_FILES" ]; then
   # Portable extended-regex pattern (BSD + GNU grep).
   # Patterns: OpenAI-style sk- keys, and key=value pairs for api_key/password/secret/token.
   PATTERN='(sk-[A-Za-z0-9-]{8,}|(api[-_]?key|password|secret|token)[[:space:]]*=[[:space:]]*["'"'"']?[^"'"'"'[:space:]]+["'"'"']?)'
-  if git diff --cached -U0 | grep -E '^\+[^+]' | grep -iE "$PATTERN" >/dev/null; then
+  if git diff --cached --no-color -U0 | grep -E '^\+' | grep -Ev '^\+\+\+ (b/|/dev/null)' | grep -iE "$PATTERN" >/dev/null; then
     echo "❌ Possible secret detected in staged changes. Review before committing."
     echo "   If this is a false positive, use: git commit --no-verify"
     exit 2
