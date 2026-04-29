@@ -5,7 +5,8 @@
     "buildCmd": "npm run build",
     "testCmd": "npm test",
     "lintCmd": "npm run lint",
-    "typecheckCmd": "npx tsc --noEmit"
+    "typecheckCmd": "npx tsc --noEmit",
+    "lintOnSaveCmd": "npx eslint \"$EDITED_FILE\" --fix --quiet"
   },
   "go-service": {
     "label": "Go service or CLI",
@@ -13,7 +14,8 @@
     "buildCmd": "go build ./...",
     "testCmd": "go test -race ./...",
     "lintCmd": "golangci-lint run",
-    "typecheckCmd": "go vet ./..."
+    "typecheckCmd": "go vet ./...",
+    "lintOnSaveCmd": "gofmt -w \"$EDITED_FILE\""
   },
   "python-data": {
     "label": "Python data pipeline or script",
@@ -21,7 +23,8 @@
     "buildCmd": "pip install -e .",
     "testCmd": "pytest",
     "lintCmd": "ruff check .",
-    "typecheckCmd": "mypy ."
+    "typecheckCmd": "mypy .",
+    "lintOnSaveCmd": "ruff check \"$EDITED_FILE\" --fix --quiet"
   },
   "react-native": {
     "label": "React Native (Expo or bare)",
@@ -29,7 +32,8 @@
     "buildCmd": "npx expo build",
     "testCmd": "npm test",
     "lintCmd": "npm run lint",
-    "typecheckCmd": "npx tsc --noEmit"
+    "typecheckCmd": "npx tsc --noEmit",
+    "lintOnSaveCmd": "npx eslint \"$EDITED_FILE\" --fix --quiet"
   },
   "fullstack-saas": {
     "label": "Fullstack SaaS (multi-concern)",
@@ -37,7 +41,8 @@
     "buildCmd": "npm run build",
     "testCmd": "npm test",
     "lintCmd": "npm run lint",
-    "typecheckCmd": "npx tsc --noEmit"
+    "typecheckCmd": "npx tsc --noEmit",
+    "lintOnSaveCmd": "npx eslint \"$EDITED_FILE\" --fix --quiet"
   },
   "none": {
     "label": "Base only (no stack profile)",
@@ -45,6 +50,7 @@
     "buildCmd": "",
     "testCmd": "",
     "lintCmd": "",
-    "typecheckCmd": ""
+    "typecheckCmd": "",
+    "lintOnSaveCmd": ""
   }
 }

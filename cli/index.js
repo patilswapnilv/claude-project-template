@@ -173,6 +173,29 @@ function setExecutable(filePath) {
   }
 }
 
+function getLintOnSaveMarkerValues(profileLintOnSaveCmd = '') {
+  const markerValues = {
+    '{{LINT_ON_SAVE_JS}}': ':',
+    '{{LINT_ON_SAVE_PY}}': ':',
+    '{{LINT_ON_SAVE_GO}}': ':',
+  };
+
+  const command = (profileLintOnSaveCmd || '').trim();
+  if (!command) return markerValues;
+
+  const bestEffortCommand = `${command} 2>/dev/null || true`;
+
+  if (command.includes('eslint')) {
+    markerValues['{{LINT_ON_SAVE_JS}}'] = bestEffortCommand;
+  } else if (command.startsWith('ruff ') || command.includes(' black ')) {
+    markerValues['{{LINT_ON_SAVE_PY}}'] = bestEffortCommand;
+  } else if (command.startsWith('gofmt')) {
+    markerValues['{{LINT_ON_SAVE_GO}}'] = bestEffortCommand;
+  }
+
+  return markerValues;
+}
+
 // ─── Main ──────────────────────────────────────────────────────────────────
 async function main() {
   console.log(`\n${c.bold}${c.blue}claude-project-template${c.reset} — Claude Code project setup\n`);
@@ -251,6 +274,7 @@ async function main() {
   const testCmd = flags.yes ? selectedProfile.testCmd : await ask(rl, 'Test command:', selectedProfile.testCmd);
   const lintCmd = flags.yes ? selectedProfile.lintCmd : await ask(rl, 'Lint command:', selectedProfile.lintCmd);
   const typecheckCmd = flags.yes ? selectedProfile.typecheckCmd : await ask(rl, 'Typecheck command:', selectedProfile.typecheckCmd);
+  const lintOnSaveCmd = selectedProfile.lintOnSaveCmd || '';
 
   if (rl) rl.close();
 
@@ -310,6 +334,7 @@ async function main() {
         fillPlaceholders(fp, {
           '{{TEST_COMMAND}}': testCmd,
           '{{LINT_COMMAND}}': lintCmd,
+          ...getLintOnSaveMarkerValues(lintOnSaveCmd),
         });
         setExecutable(fp);
       }
