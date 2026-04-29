@@ -27,29 +27,9 @@ if [ -z "$EDITED_FILE" ]; then
   EDITED_FILE="${1:-}"
 fi
 
-if [ -z "$EDITED_FILE" ]; then
-  exit 0
-fi
-
-# ─── TypeScript/JavaScript ──────────────────────────────────────────────────
-if [[ "$EDITED_FILE" =~ \.(ts|tsx|js|jsx)$ ]]; then
-  # Uncomment for ESLint auto-fix on save
-  # npx eslint "$EDITED_FILE" --fix --quiet 2>/dev/null || true
-  echo "  [lint-on-save] Skipped (configure your linter above)"
-fi
-
-# ─── Python ────────────────────────────────────────────────────────────────
-if [[ "$EDITED_FILE" =~ \.py$ ]]; then
-  # Uncomment for ruff or black auto-format on save
-  # ruff check "$EDITED_FILE" --fix --quiet 2>/dev/null || true
-  # black "$EDITED_FILE" --quiet 2>/dev/null || true
-  echo "  [lint-on-save] Skipped (configure your formatter above)"
-fi
-
-# ─── Go ────────────────────────────────────────────────────────────────────
-if [[ "$EDITED_FILE" =~ \.go$ ]]; then
-  # gofmt -w "$EDITED_FILE" 2>/dev/null || true
-  echo "  [lint-on-save] Skipped (configure gofmt above)"
-fi
-
+case "$EDITED_FILE" in
+  *.ts|*.tsx|*.js|*.jsx)  {{LINT_ON_SAVE_JS}}  ;;
+  *.py)                    {{LINT_ON_SAVE_PY}}  ;;
+  *.go)                    {{LINT_ON_SAVE_GO}}  ;;
+esac
 exit 0
