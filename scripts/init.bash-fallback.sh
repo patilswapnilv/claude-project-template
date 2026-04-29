@@ -1,6 +1,6 @@
 #!/bin/bash
 # init.bash-fallback.sh — Claude Project Template Bootstrap
-# Usage: ./scripts/init.bash-fallback.sh [target-project-path]
+# Usage: ./scripts/init.bash-fallback.sh [--target <path>] [--yes] [--force] [target-project-path]
 #
 # Copies base template + selected profile to your project.
 # Fills in CLAUDE.md placeholders interactively.
@@ -8,7 +8,21 @@
 set -euo pipefail
 
 TEMPLATE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-TARGET="${1:-}"
+TARGET=""
+YES=0
+FORCE=0
+
+print_usage() {
+  cat <<'EOF'
+Usage: ./scripts/init.bash-fallback.sh [--target <path>] [--yes] [--force] [target-project-path]
+
+Options:
+  --target <path>   Install to this directory (default: current directory)
+  --yes, -y         Non-interactive, accept all defaults
+  --force           Overwrite existing CLAUDE.md and .claude/ without prompting
+  --help, -h        Show this help
+EOF
+}
 
 # ─── Colors ────────────────────────────────────────────────────────────────
 RED='\033[0;31m'
@@ -24,10 +38,51 @@ print_warning() { echo -e "${YELLOW}⚠${NC} $1"; }
 print_error() { echo -e "${RED}✗${NC} $1"; }
 prompt() { echo -ne "${BOLD}$1${NC} "; }
 
+# ─── Parse args ─────────────────────────────────────────────────────────────
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --target)
+      if [[ -z "${2:-}" ]]; then
+        print_error "--target requires a path"
+        exit 1
+      fi
+      TARGET="$2"
+      shift 2
+      ;;
+    --yes|-y)
+      YES=1
+      shift
+      ;;
+    --force)
+      FORCE=1
+      shift
+      ;;
+    --help|-h)
+      print_usage
+      exit 0
+      ;;
+    --*)
+      print_error "Unknown option: $1"
+      print_usage
+      exit 1
+      ;;
+    *)
+      if [[ -z "$TARGET" ]]; then
+        TARGET="$1"
+      fi
+      shift
+      ;;
+  esac
+done
+
 # ─── Get target directory ──────────────────────────────────────────────────
 if [ -z "$TARGET" ]; then
-  prompt "Target project directory (absolute path or . for current):"
-  read -r TARGET
+  if [ "$YES" -eq 1 ]; then
+    TARGET="$(pwd)"
+  else
+    prompt "Target project directory (absolute path or . for current):"
+    read -r TARGET
+  fi
 fi
 
 if [ "$TARGET" = "." ]; then
@@ -46,12 +101,19 @@ echo ""
 
 # ─── Guard against overwriting ─────────────────────────────────────────────
 if [ -f "$TARGET/CLAUDE.md" ] || [ -d "$TARGET/.claude" ]; then
-  print_warning "CLAUDE.md or .claude/ already exists in target."
-  prompt "Overwrite? (y/N):"
-  read -r OVERWRITE
-  if [[ "$OVERWRITE" != "y" && "$OVERWRITE" != "Y" ]]; then
-    echo "Aborted."
-    exit 0
+  if [ "$FORCE" -eq 1 ]; then
+    print_warning "Existing CLAUDE.md or .claude/ — overwriting (--force)."
+  elif [ "$YES" -eq 1 ]; then
+    print_error "Existing CLAUDE.md or .claude/ found. Re-run with --force to overwrite, or remove them first."
+    exit 1
+  else
+    prompt "CLAUDE.md or .claude/ already exists in target. Overwrite? (y/N):"
+    read -r OVERWRITE
+    OVERWRITE="${OVERWRITE,,}"
+    if [[ "$OVERWRITE" != "y" && "$OVERWRITE" != "yes" ]]; then
+      echo "Aborted."
+      exit 0
+    fi
   fi
 fi
 

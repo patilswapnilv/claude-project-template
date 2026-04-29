@@ -200,7 +200,7 @@ mv .claude/_go-rules/* .claude/rules/ && rmdir .claude/_go-rules
 
 **Pre-commit secret scan doesn't catch a fake key on my Mac.** macOS BSD `grep` doesn't support `-P`. Patch the hook with the portable form in [`docs/HOOKS.md`](docs/HOOKS.md) or install ripgrep.
 
-**I want to upgrade the template.** Re-running init overwrites `.claude/` and the seeded `CLAUDE.md`. Back up your edited `CLAUDE.md` first; merge by diff.
+**I want to upgrade the template.** Re-running init prompts before overwriting `.claude/` and the seeded `CLAUDE.md`. With `--yes`, it aborts if either exists unless you also pass `--force`. Back up your edited `CLAUDE.md` first; merge by diff.
 
 ---
 

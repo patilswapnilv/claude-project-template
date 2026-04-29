@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: GPL-3.0-only
 /**
  * claude-project-template CLI
- * Usage: npx claude-project-template [profile] [--target <path>] [--dry-run] [--yes]
+ * Usage: npx claude-project-template [profile] [--target <path>] [--dry-run] [--yes] [--force]
  *
  * Zero external dependencies — pure Node.js stdlib only.
  */
@@ -40,6 +40,7 @@ const args = process.argv.slice(2);
 const flags = {
   dryRun: args.includes('--dry-run'),
   yes: args.includes('--yes') || args.includes('-y'),
+  force: args.includes('--force'),
   help: args.includes('--help') || args.includes('-h'),
   target: null,
   profile: null,
@@ -80,6 +81,7 @@ ${c.bold}Profiles:${c.reset}
 ${c.bold}Options:${c.reset}
   --target <path>   Install to this directory (default: current directory)
   --yes, -y         Non-interactive, accept all defaults
+  --force           Overwrite existing CLAUDE.md and .claude/ without prompting
   --dry-run         Show what would happen without doing anything
   --help, -h        Show this help
 `);
@@ -198,13 +200,19 @@ async function main() {
   const hasExisting = fs.existsSync(path.join(targetDir, 'CLAUDE.md')) ||
                       fs.existsSync(path.join(targetDir, '.claude'));
 
-  if (hasExisting && !flags.yes) {
-    warn('CLAUDE.md or .claude/ already exists in target.');
-    const answer = await ask(rl, 'Overwrite? (y/N):', 'n');
-    if (!['y', 'yes'].includes(answer.toLowerCase())) {
-      info('Aborted.');
-      rl.close();
-      process.exit(0);
+  if (hasExisting) {
+    if (flags.force) {
+      warn('Existing CLAUDE.md or .claude/ — overwriting (--force).');
+    } else if (flags.yes) {
+      err('Existing CLAUDE.md or .claude/ found. Re-run with --force to overwrite, or remove them first.');
+      process.exit(1);
+    } else {
+      const answer = await ask(rl, 'CLAUDE.md or .claude/ already exists in target. Overwrite? (y/N):', 'n');
+      if (!['y', 'yes'].includes(answer.toLowerCase())) {
+        info('Aborted.');
+        rl.close();
+        process.exit(0);
+      }
     }
   }
 
