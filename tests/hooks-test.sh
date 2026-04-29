@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 # Smoke test for pre-commit secret scanning.
 set -euo pipefail
-TMP=$(mktemp -d)
-trap "rm -rf $TMP" EXIT
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+TMP=$(mktemp -d 2>/dev/null || mktemp -d -t hooks-test)
+trap 'rm -rf "$TMP"' EXIT
 
 git -C "$TMP" init -q
 git -C "$TMP" -c user.name=hooks-test -c user.email=hooks-test@example.com commit --allow-empty -m "init" -q
 git -C "$TMP" checkout -q -b hooks-test
-cp base/.claude/hooks/pre-commit.sh "$TMP/.git/pre-commit-test.sh"
+cp "$REPO_ROOT/base/.claude/hooks/pre-commit.sh" "$TMP/.git/pre-commit-test.sh"
 chmod +x "$TMP/.git/pre-commit-test.sh"
 
 # Negative case (no secret)

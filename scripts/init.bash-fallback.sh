@@ -156,50 +156,73 @@ esac
 # ─── Stack commands ────────────────────────────────────────────────────────
 print_header "Commands (press Enter to skip)"
 
-case "$PROFILE" in
-  nextjs)
-    DEV_CMD_DEFAULT="npm run dev"
-    BUILD_CMD_DEFAULT="npm run build"
-    TEST_CMD_DEFAULT="npm test"
-    LINT_CMD_DEFAULT="npm run lint"
-    TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
-    ;;
-  go-service)
-    DEV_CMD_DEFAULT="go run ./cmd/..."
-    BUILD_CMD_DEFAULT="go build ./..."
-    TEST_CMD_DEFAULT="go test -race ./..."
-    LINT_CMD_DEFAULT="golangci-lint run"
-    TYPECHECK_CMD_DEFAULT="go vet ./..."
-    ;;
-  python-data)
-    DEV_CMD_DEFAULT="python src/main.py"
-    BUILD_CMD_DEFAULT="pip install -e ."
-    TEST_CMD_DEFAULT="pytest"
-    LINT_CMD_DEFAULT="ruff check ."
-    TYPECHECK_CMD_DEFAULT="mypy ."
-    ;;
-  react-native)
-    DEV_CMD_DEFAULT="npx expo start"
-    BUILD_CMD_DEFAULT="npx expo build"
-    TEST_CMD_DEFAULT="npm test"
-    LINT_CMD_DEFAULT="npm run lint"
-    TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
-    ;;
-  fullstack-saas)
-    DEV_CMD_DEFAULT="npm run dev"
-    BUILD_CMD_DEFAULT="npm run build"
-    TEST_CMD_DEFAULT="npm test"
-    LINT_CMD_DEFAULT="npm run lint"
-    TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
-    ;;
-  *)
-    DEV_CMD_DEFAULT=""
-    BUILD_CMD_DEFAULT=""
-    TEST_CMD_DEFAULT=""
-    LINT_CMD_DEFAULT=""
-    TYPECHECK_CMD_DEFAULT=""
-    ;;
-esac
+set_hardcoded_defaults() {
+  case "$1" in
+    nextjs)
+      DEV_CMD_DEFAULT="npm run dev"
+      BUILD_CMD_DEFAULT="npm run build"
+      TEST_CMD_DEFAULT="npm test"
+      LINT_CMD_DEFAULT="npm run lint"
+      TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
+      ;;
+    go-service)
+      DEV_CMD_DEFAULT="go run ./cmd/..."
+      BUILD_CMD_DEFAULT="go build ./..."
+      TEST_CMD_DEFAULT="go test -race ./..."
+      LINT_CMD_DEFAULT="golangci-lint run"
+      TYPECHECK_CMD_DEFAULT="go vet ./..."
+      ;;
+    python-data)
+      DEV_CMD_DEFAULT="python src/main.py"
+      BUILD_CMD_DEFAULT="pip install -e ."
+      TEST_CMD_DEFAULT="pytest"
+      LINT_CMD_DEFAULT="ruff check ."
+      TYPECHECK_CMD_DEFAULT="mypy ."
+      ;;
+    react-native)
+      DEV_CMD_DEFAULT="npx expo start"
+      BUILD_CMD_DEFAULT="npx expo build"
+      TEST_CMD_DEFAULT="npm test"
+      LINT_CMD_DEFAULT="npm run lint"
+      TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
+      ;;
+    fullstack-saas)
+      DEV_CMD_DEFAULT="npm run dev"
+      BUILD_CMD_DEFAULT="npm run build"
+      TEST_CMD_DEFAULT="npm test"
+      LINT_CMD_DEFAULT="npm run lint"
+      TYPECHECK_CMD_DEFAULT="npx tsc --noEmit"
+      ;;
+    *)
+      DEV_CMD_DEFAULT=""
+      BUILD_CMD_DEFAULT=""
+      TEST_CMD_DEFAULT=""
+      LINT_CMD_DEFAULT=""
+      TYPECHECK_CMD_DEFAULT=""
+      ;;
+  esac
+}
+
+PROFILE_KEY="${PROFILE:-none}"
+PROFILES_JSON="$TEMPLATE_DIR/config/profiles.json"
+LOADED_FROM_JSON=0
+
+if command -v node >/dev/null 2>&1 && [ -f "$PROFILES_JSON" ]; then
+  PROFILE_DATA="$(
+    node -e "const fs=require('fs');const [file,key]=process.argv.slice(1);const data=JSON.parse(fs.readFileSync(file,'utf8'));const p=data[key]||data.none;if(!p){process.exit(1);}process.stdout.write([p.devCmd,p.buildCmd,p.testCmd,p.lintCmd,p.typecheckCmd].join('\u001f'));" \
+      "$PROFILES_JSON" \
+      "$PROFILE_KEY" \
+      2>/dev/null || true
+  )"
+  if [ -n "$PROFILE_DATA" ]; then
+    IFS=$'\x1f' read -r DEV_CMD_DEFAULT BUILD_CMD_DEFAULT TEST_CMD_DEFAULT LINT_CMD_DEFAULT TYPECHECK_CMD_DEFAULT <<< "$PROFILE_DATA"
+    LOADED_FROM_JSON=1
+  fi
+fi
+
+if [ "$LOADED_FROM_JSON" -ne 1 ]; then
+  set_hardcoded_defaults "$PROFILE_KEY"
+fi
 
 prompt "Dev command [$DEV_CMD_DEFAULT]:"
 read -r DEV_CMD

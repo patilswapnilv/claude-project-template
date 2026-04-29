@@ -12,7 +12,6 @@
 const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
-const { execSync } = require('child_process');
 
 // ─── ANSI colors ───────────────────────────────────────────────────────────
 const c = {
@@ -34,6 +33,7 @@ const info = (msg) => console.log(`  ${msg}`);
 // ─── Resolve template root ─────────────────────────────────────────────────
 // Works both from npx (installed in node_modules) and local clone
 const TEMPLATE_ROOT = path.resolve(__dirname, '..');
+const PROFILE_CONFIG_PATH = path.join(TEMPLATE_ROOT, 'config', 'profiles.json');
 
 // ─── Parse CLI args ────────────────────────────────────────────────────────
 const args = process.argv.slice(2);
@@ -89,14 +89,17 @@ ${c.bold}Options:${c.reset}
 }
 
 // ─── Available profiles ────────────────────────────────────────────────────
-const PROFILES = [
-  { key: 'nextjs',        label: 'Next.js 13+ (App Router)',          devCmd: 'npm run dev',       buildCmd: 'npm run build', testCmd: 'npm test',           lintCmd: 'npm run lint',      typecheckCmd: 'npx tsc --noEmit' },
-  { key: 'go-service',    label: 'Go service or CLI',                  devCmd: 'go run ./cmd/...',  buildCmd: 'go build ./...', testCmd: 'go test -race ./...', lintCmd: 'golangci-lint run', typecheckCmd: 'go vet ./...' },
-  { key: 'python-data',   label: 'Python data pipeline or script',     devCmd: 'python src/main.py', buildCmd: 'pip install -e .', testCmd: 'pytest',          lintCmd: 'ruff check .',      typecheckCmd: 'mypy .' },
-  { key: 'react-native',  label: 'React Native (Expo or bare)',        devCmd: 'npx expo start',   buildCmd: 'npx expo build', testCmd: 'npm test',           lintCmd: 'npm run lint',      typecheckCmd: 'npx tsc --noEmit' },
-  { key: 'fullstack-saas', label: 'Fullstack SaaS (multi-concern)',    devCmd: 'npm run dev',       buildCmd: 'npm run build', testCmd: 'npm test',           lintCmd: 'npm run lint',      typecheckCmd: 'npx tsc --noEmit' },
-  { key: 'none',           label: 'Base only (no stack profile)',       devCmd: '',                  buildCmd: '',              testCmd: '',                   lintCmd: '',                  typecheckCmd: '' },
-];
+function loadProfiles() {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(PROFILE_CONFIG_PATH, 'utf8'));
+    return Object.entries(parsed).map(([key, profile]) => ({ key, ...profile }));
+  } catch (error) {
+    err(`Failed to load profile config from ${PROFILE_CONFIG_PATH}: ${error.message}`);
+    process.exit(1);
+  }
+}
+
+const PROFILES = loadProfiles();
 
 // ─── Readline helper ───────────────────────────────────────────────────────
 function createRL() {
